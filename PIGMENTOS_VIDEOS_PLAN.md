@@ -7,7 +7,7 @@
 > Guardados en `media/pigments/<CI>.mp4`. Registrados en el objeto `PVID` del index.html.
 > Prompt base: *"a pool of <color> watercolor blooms on white paper, then morphs into <obra>, painterly transition"*.
 
-Estado: **6 / 103 publicados** (Lote 1 ✅). Los demás por lotes.
+Estado: **12 / 103 publicados** (Lotes 1 y 2 ✅). Ritmo: 2 tandas de 6 al día, revisando cada una.
 
 ## Lote 1 — PUBLICADO ✅
 | CI | Pigmento | Obra icónica |
@@ -18,6 +18,16 @@ Estado: **6 / 103 publicados** (Lote 1 ✅). Los demás por lotes.
 | PG18 | Viridian | Nenúfares · Monet |
 | PBr7 | Siena Tostada | Autorretrato · Rembrandt |
 | PR108 | Rojo Cadmio | La danza · Matisse |
+
+## Lote 2 — PUBLICADO ✅
+| CI | Pigmento | Obra icónica |
+|---|---|---|
+| PV23 | Violeta Dioxazina | Los lirios · Van Gogh |
+| PB15:3 | Azul Ftalocianina | Período Azul · Picasso |
+| PBk7 | Negro de Marfil | Las pinturas negras · Goya |
+| PY42 | Ocre Amarillo | Cuevas de Altamira |
+| PO62 | Naranja Winsor | Amapolas · Monet |
+| PW6 | Blanco Titanio | Cazadores en la nieve · Bruegel |
 
 ## Mapa completo (obra/imagen asignada a cada pigmento)
 
