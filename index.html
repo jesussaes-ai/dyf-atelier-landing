@@ -88,6 +88,14 @@ section{padding:92px 0}
 .pchip .pi{padding:11px 12px 13px}.pchip .ci{font-size:.66rem;letter-spacing:.12em;color:var(--gold);font-weight:500}
 .pchip .pn{font-family:var(--serif);font-size:1.02rem;line-height:1.15;margin:3px 0 7px;min-height:2.3em}
 .pchip .meta{font-size:.68rem;color:var(--ink-soft);display:flex;flex-wrap:wrap;gap:4px}.pchip .tag{background:var(--paper-2);padding:2px 7px;border-radius:20px}
+.pchip .ps .pvid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .55s ease;z-index:2}
+.pchip .ps .pvid.on{opacity:1}
+.pchip .ps .pcap{position:absolute;left:0;right:0;bottom:0;z-index:3;font-size:.58rem;line-height:1.2;color:#fff;background:linear-gradient(to top,rgba(10,10,8,.82),transparent);padding:14px 8px 5px;opacity:0;transform:translateY(4px);transition:opacity .4s,transform .4s;pointer-events:none}
+.pchip .ps.playing .pcap{opacity:1;transform:none}
+.pchip .ps .vind{position:absolute;top:7px;right:7px;z-index:3;width:19px;height:19px;border-radius:50%;background:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.75);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+.pchip .ps .vind::after{content:"";border-left:6px solid #fff;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-left:2px}
+.pchip .ps.playing .vind{opacity:0}
+.pchip .ps.hasvid{cursor:pointer}
 .count{text-align:center;color:var(--ink-soft);font-size:.8rem;margin-top:24px;letter-spacing:.08em}
 .story{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center}
 @media(max-width:860px){.story{grid-template-columns:1fr;gap:32px}}
@@ -234,13 +242,27 @@ let active='ALL';const fE=document.getElementById('filters');
 function rF(){const b=[['ALL','Todos']].concat(FAM.map(f=>[f[0],f[1]]));
  fE.innerHTML=b.map(x=>`<button class="fbtn ${x[0]===active?'active':''}" data-f="${x[0]}">${x[1]}</button>`).join('');
  fE.querySelectorAll('.fbtn').forEach(x=>x.onclick=()=>{active=x.dataset.f;rF();rP()})}
+// Videos de transformación color→obra por Color Index. Carga perezosa (solo al interactuar).
+const PVID={
+ "PB27":{mp4:"media/pigments/PB27.mp4",art:"La gran ola de Kanagawa · Hokusai"},
+ "PB29":{mp4:"media/pigments/PB29.mp4",art:"La joven de la perla · Vermeer"},
+ "PY37":{mp4:"media/pigments/PY37.mp4",art:"Los girasoles · Van Gogh"},
+ "PG18":{mp4:"media/pigments/PG18.mp4",art:"Nenúfares · Monet"},
+ "PBr7":{mp4:"media/pigments/PBr7.mp4",art:"Autorretrato · Rembrandt"},
+ "PR108":{mp4:"media/pigments/PR108.mp4",art:"La danza · Matisse"}
+};
 function rP(){const l=active==='ALL'?PIG:PIG.filter(p=>p.fam===active);
- document.getElementById('pigGrid').innerHTML=l.map(p=>{const lt=p.fam==='PW';
-  return `<div class="pchip"><div class="ps" style="background:${p.hex};${lt?'border-bottom:1px solid var(--line)':''}">
-   <div class="liquid" style="background:radial-gradient(circle at 30% 30%,${shade(p.hex,28)},transparent 60%),radial-gradient(circle at 72% 70%,${shade(p.hex,-24)},transparent 60%),linear-gradient(135deg,${p.hex},${shade(p.hex,-12)})"></div><div class="b"></div></div>
+ document.getElementById('pigGrid').innerHTML=l.map(p=>{const lt=p.fam==='PW';const v=PVID[p.ci];
+  return `<div class="pchip"><div class="ps${v?' hasvid':''}" style="background:${p.hex};${lt?'border-bottom:1px solid var(--line)':''}">
+   <div class="liquid" style="background:radial-gradient(circle at 30% 30%,${shade(p.hex,28)},transparent 60%),radial-gradient(circle at 72% 70%,${shade(p.hex,-24)},transparent 60%),linear-gradient(135deg,${p.hex},${shade(p.hex,-12)})"></div><div class="b"></div>${v?`<video class="pvid" preload="none" muted loop playsinline data-src="${v.mp4}"></video><div class="vind"></div><div class="pcap">${v.art}</div>`:''}</div>
    <div class="pi"><div class="ci">${p.ci}</div><div class="pn">${p.name}</div>
    <div class="meta"><span class="tag">${p.tr}</span><span class="tag">Gran. ${p.gr}</span></div></div></div>`}).join('');
- document.getElementById('pigCount').textContent=`Mostrando ${l.length} de ${PIG.length} pigmentos`}
+ document.getElementById('pigCount').textContent=`Mostrando ${l.length} de ${PIG.length} pigmentos`;
+ document.querySelectorAll('#pigGrid .ps.hasvid').forEach(ps=>{const vid=ps.querySelector('.pvid');
+  const start=()=>{if(!vid.src)vid.src=vid.dataset.src;ps.classList.add('playing');vid.classList.add('on');vid.play().catch(()=>{})};
+  const stop=()=>{ps.classList.remove('playing');vid.classList.remove('on');vid.pause();};
+  ps.addEventListener('mouseenter',start);ps.addEventListener('mouseleave',stop);
+  ps.addEventListener('click',()=>{if(ps.classList.contains('playing'))stop();else start()});});}
 rF();rP();
 const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
